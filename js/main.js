@@ -1,7 +1,13 @@
-//variables
+/**
+    GLOBAL VARIABLES/DOM OBJECTS
+ */
 let searchInput = document.querySelector('#textQuery');
+let selectEl = document.querySelector('#inputGroupSelect01');
+let selectedLang = 'pt';
 
-//functions
+/**
+    FUNCTIONS
+ */
 function getLanguages(){
     axios.get('https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=trnsl.1.1.20180528T163234Z.bba076e88d4c4ad9.3fdb9074e8add953be6bf4f2fa1983816fbf403d&ui=en')
     .then((response) => {
@@ -17,7 +23,13 @@ function getLanguages(){
         languageCode.code = Object.keys(languages);
         for(language in languages) {
             languageCode.name = languages[language];
-            console.log(languageCode)
+            languageCode.code = language;
+            console.log(languageCode);
+            let option = document.createElement('option');
+            option.innerHTML = languageCode.name;
+            option.value = languageCode.code;
+            selectEl.appendChild(option);
+
         }
  
  
@@ -27,11 +39,10 @@ function getLanguages(){
     });
 }
 
-//events
-searchInput.addEventListener('keyup',() => {
+function translateText(){
     let searchText = document.querySelector('#textQuery').value;
     if(searchText != ''){
-        axios.get('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180528T163234Z.bba076e88d4c4ad9.3fdb9074e8add953be6bf4f2fa1983816fbf403d&lang=pt&text=' + searchText)
+        axios.get('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180528T163234Z.bba076e88d4c4ad9.3fdb9074e8add953be6bf4f2fa1983816fbf403d&lang=' + selectedLang + '&text=' + searchText)
         .then((response) => {
             //console.log(response);
             //let translation = response;
@@ -42,8 +53,22 @@ searchInput.addEventListener('keyup',() => {
             console.log(err);
         });
     }
+}
+
+/*
+    EVENTS
+*/
+searchInput.addEventListener('keyup',() => {
+    translateText();
+})
+
+selectEl.addEventListener('change',() => {
+    selectedLang = selectEl.options[selectEl.selectedIndex].value;
+    translateText();
 })
 
 
-//main
+/*
+    MAIN
+ */
 getLanguages();
