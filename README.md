@@ -1,6 +1,6 @@
 # Translator
 
-It's a simple JavaScript/ app translate that allows you to translate to one of 92 languages available in Yandex API. Also, allows you to speak some phrases and translate with the SpeechRecognizer api, a experimental function most available on webkit.
+It's a simple JavaScript app that allows you to translate to one of 92 languages available in Yandex API. Also, allows you to speak some phrases and translate with the SpeechRecognizer api, an experimental function most available on webkit.
 
 ## Stack
 
