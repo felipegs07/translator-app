@@ -11,28 +11,19 @@ let selectedLang = 'pt';
 function getLanguages(){
     axios.get('https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=trnsl.1.1.20180528T163234Z.bba076e88d4c4ad9.3fdb9074e8add953be6bf4f2fa1983816fbf403d&ui=en')
     .then((response) => {
-        //console.log(response);
         let languages = response.data.langs;
-        let num = 0;
-
         let languageCode = {
             name:'',
             code:''
         }
-        
-        languageCode.code = Object.keys(languages);
         for(language in languages) {
             languageCode.name = languages[language];
             languageCode.code = language;
-            //console.log(languageCode);
             let option = document.createElement('option');
             option.innerHTML = languageCode.name;
             option.value = languageCode.code;
             selectEl.appendChild(option);
-
         }
- 
- 
     })
     .catch((err) => {
         console.log(err);
@@ -48,12 +39,9 @@ function translateText(textArg){
         searchText = textArg;
     }
 
-
     if(searchText != ''){
         axios.get('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180528T163234Z.bba076e88d4c4ad9.3fdb9074e8add953be6bf4f2fa1983816fbf403d&lang=' + selectedLang + '&text=' + searchText)
         .then((response) => {
-            //console.log(response);
-            //let translation = response;
             let translateInput = document.querySelector('#translatedText');
             translateInput.value = response.data.text[0];
         })
@@ -72,12 +60,11 @@ searchInput.addEventListener('keyup',() => {
 
 selectEl.addEventListener('change',() => {
     selectedLang = selectEl.options[selectEl.selectedIndex].value;
-    translateText();
+    translateText('');
 })
 
 window.addEventListener('DOMContentLoaded', (e) => {
     let speakBtn = document.querySelector('#speakBtn');
-    
     if(window.SpeechRecognition || window.webkitSpeechRecognition){
         let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = new SpeechRecognition();
@@ -87,18 +74,15 @@ window.addEventListener('DOMContentLoaded', (e) => {
         })
         
         recognition.addEventListener('result', (e) => {
-            console.log(e);
             let result = e.results[0][0].transcript;
             document.querySelector('#textQuery').value = result;
             translateText(result);
-            console.log(result);
         })
     }
     else{
         console.log('Error on speech recognition :(');
     }
 })
-
 
 /*
     MAIN
